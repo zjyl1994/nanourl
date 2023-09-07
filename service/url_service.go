@@ -16,14 +16,15 @@ var getUrlObjectFlight singleflight.Group
 type URLService struct{}
 
 func (URLService) New(val val_obj.URLObject) (uint, string, error) {
-	for {
+	var retry int
+	for retry < vars.SHORT_CODE_MAX_RETRY {
 		var m db_model.URLObject
 		m.URL = val.LongURL
 
 		if val.ShortCode != "" {
 			m.Code = val.ShortCode
 		} else {
-			m.Code = util.RandString(vars.SHORT_URL_SIZE)
+			m.Code = util.RandString(vars.SHORT_CODE_SIZE)
 		}
 
 		err := vars.DB.Create(&m).Error
@@ -35,9 +36,11 @@ func (URLService) New(val val_obj.URLObject) (uint, string, error) {
 
 		}
 		if val.ShortCode != "" {
-			return 0, "", ErrDuplicate
+			return 0, "", ErrCodeDuplicate
 		}
+		retry++
 	}
+	return 0, "", ErrCodeExhausted
 }
 
 func (URLService) GetById(id uint) (*db_model.URLObject, error) {
@@ -45,7 +48,7 @@ func (URLService) GetById(id uint) (*db_model.URLObject, error) {
 	err := vars.DB.First(&m, "id = ?", id).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, ErrNotFound
+			return nil, ErrCodeNotFound
 		}
 		return nil, err
 	}
@@ -74,7 +77,7 @@ func (URLService) GetByCode(code string) (*db_model.URLObject, error) {
 	err := vars.DB.First(&m, "code = ?", code).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, ErrNotFound
+			return nil, ErrCodeNotFound
 		}
 		return nil, err
 	}

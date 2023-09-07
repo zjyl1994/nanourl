@@ -3,6 +3,7 @@ package service
 import "errors"
 
 var (
-	ErrNotFound  = errors.New("id not found")
-	ErrDuplicate = errors.New("code duplicate")
+	ErrCodeNotFound  = errors.New("code not found")
+	ErrCodeDuplicate = errors.New("code duplicate")
+	ErrCodeExhausted  = errors.New("code exhausted")
 )
