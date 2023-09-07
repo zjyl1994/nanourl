@@ -9,7 +9,6 @@ import (
 	lru "github.com/hashicorp/golang-lru/v2"
 	_ "github.com/joho/godotenv/autoload"
 	log "github.com/sirupsen/logrus"
-	"github.com/speps/go-hashids/v2"
 	"github.com/zjyl1994/nanourl/model/db_model"
 	"github.com/zjyl1994/nanourl/model/val_obj"
 	"github.com/zjyl1994/nanourl/server"
@@ -47,10 +46,6 @@ func main() {
 	}
 
 	// init vars
-	vars.HashId, err = hashids.New()
-	if err != nil {
-		log.Fatalln(err.Error())
-	}
 	vars.CodeCache, err = lru.New2Q[string, val_obj.URLObject](vars.CODE_CACHE_SIZE)
 	if err != nil {
 		log.Fatalln(err.Error())

@@ -22,19 +22,12 @@ func CreateUrlHandler(c *fiber.Ctx) error {
 	}
 
 	var svc service.URLService
-	id, err := svc.New(val_obj.URLObject{
+	_, shortCode, err := svc.New(val_obj.URLObject{
 		LongURL:   req.LongUrl,
 		ShortCode: req.ShortCode,
 	})
 	if err != nil {
 		return err
 	}
-	if len(req.ShortCode) != 0 {
-		return c.SendString(vars.BaseUrl + req.ShortCode)
-	}
-	hashCode, err := svc.GetShortCode(id)
-	if err != nil {
-		return err
-	}
-	return c.SendString(vars.BaseUrl + hashCode)
+	return c.Status(fiber.StatusCreated).SendString(vars.BaseUrl + shortCode)
 }

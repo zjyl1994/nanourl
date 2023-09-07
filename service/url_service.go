@@ -15,18 +15,29 @@ var getUrlObjectFlight singleflight.Group
 
 type URLService struct{}
 
-func (URLService) New(val val_obj.URLObject) (uint, error) {
-	var m db_model.URLObject
-	m.URL = val.LongURL
-	m.Code = val.ShortCode
-	err := vars.DB.Create(&m).Error
-	if err != nil {
-		if util.IsSqliteDuplicateError(err) {
-			return 0, ErrDuplicate
+func (URLService) New(val val_obj.URLObject) (uint, string, error) {
+	for {
+		var m db_model.URLObject
+		m.URL = val.LongURL
+
+		if val.ShortCode != "" {
+			m.Code = val.ShortCode
+		} else {
+			m.Code = util.RandString(vars.SHORT_URL_SIZE)
 		}
-		return 0, err
+
+		err := vars.DB.Create(&m).Error
+		if err == nil {
+			return m.ID, m.Code, nil
+		}
+		if !util.IsSqliteDuplicateError(err) {
+			return 0, "", err
+
+		}
+		if val.ShortCode != "" {
+			return 0, "", ErrDuplicate
+		}
 	}
-	return m.ID, nil
 }
 
 func (URLService) GetById(id uint) (*db_model.URLObject, error) {
@@ -70,27 +81,12 @@ func (URLService) GetByCode(code string) (*db_model.URLObject, error) {
 	return &m, nil
 }
 
-func (URLService) GetShortCode(id uint) (string, error) {
-	return vars.HashId.Encode([]int{int(id)})
-}
-
-func (s URLService) SearchCode(code string) (*db_model.URLObject, error) {
-	if obj, err := s.GetByCode(code); err == nil {
-		return obj, nil
-	}
-	ids, err := vars.HashId.DecodeWithError(code)
-	if err != nil {
-		return nil, ErrNotFound
-	}
-	return s.GetById(uint(ids[0]))
-}
-
-func (s URLService) SearchCodeWithCache(code string) (val_obj.URLObject, error) {
+func (s URLService) SearchCode(code string) (val_obj.URLObject, error) {
 	if obj, ok := vars.CodeCache.Get(code); ok {
 		return obj, nil
 	} else {
 		result, err, _ := getUrlObjectFlight.Do(code, func() (interface{}, error) {
-			return s.SearchCode(code)
+			return s.GetByCode(code)
 		})
 		if err != nil {
 			return val_obj.URLObject{}, nil
