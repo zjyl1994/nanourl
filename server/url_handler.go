@@ -32,15 +32,13 @@ func RedirectHandler(c *fiber.Ctx) error {
 	} else {
 		realIp = c.Context().RemoteIP().String()
 	}
-	err = logSvc.AddLog(val_obj.AccessLog{
+
+	logSvc.AddLog(val_obj.AccessLog{
 		UrlId:     obj.Id,
 		Referrer:  string(c.Request().Header.Referer()),
 		UserAgent: string(c.Request().Header.UserAgent()),
 		UserIp:    realIp,
 	})
-	if err != nil {
-		return err
-	}
 
 	return c.Redirect(obj.LongURL)
 }

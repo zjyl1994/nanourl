@@ -1,6 +1,8 @@
 package vars
 
 import (
+	"time"
+
 	lru "github.com/hashicorp/golang-lru/v2"
 	"github.com/zjyl1994/nanourl/model/val_obj"
 	"gorm.io/gorm"
@@ -23,4 +25,6 @@ const (
 	CODE_CACHE_SIZE      = 200
 	SHORT_CODE_SIZE      = 6
 	SHORT_CODE_MAX_RETRY = 100
+	BULK_LOG_SIZE        = 100
+	BULK_LOG_TIMEOUT     = 3 * time.Second
 )
