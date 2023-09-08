@@ -12,6 +12,7 @@ import (
 	"github.com/zjyl1994/nanourl/model/db_model"
 	"github.com/zjyl1994/nanourl/model/val_obj"
 	"github.com/zjyl1994/nanourl/server"
+	"github.com/zjyl1994/nanourl/util"
 	"github.com/zjyl1994/nanourl/vars"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -51,6 +52,12 @@ func main() {
 		log.Fatalln(err.Error())
 	}
 
+	geoipDBFile := filepath.Join(vars.DataDir, vars.GEOIP_DATABASE_FILENAME)
+	if !util.FileExist(geoipDBFile) {
+		if err := util.HttpDownload(vars.GEOIP_DOWNLOAD_URL, geoipDBFile, vars.DEFAULT_DOWNLOAD_TIMEOUT); err != nil {
+			log.Fatalln(err.Error())
+		}
+	}
 	// init database
 	vars.DB, err = gorm.Open(sqlite.Open(filepath.Join(vars.DataDir, "nanourl.sqlite")))
 	if err != nil {

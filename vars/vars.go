@@ -22,9 +22,13 @@ const (
 	DEFAULT_LISTEN  = ":9900"
 	DEFAULT_BASEURL = "http://localhost:9900/"
 
-	CODE_CACHE_SIZE      = 200
-	SHORT_CODE_SIZE      = 6
-	SHORT_CODE_MAX_RETRY = 100
-	BULK_LOG_SIZE        = 100
-	BULK_LOG_TIMEOUT     = 3 * time.Second
+	CODE_CACHE_SIZE          = 200
+	SHORT_CODE_SIZE          = 6
+	SHORT_CODE_MAX_RETRY     = 100
+	BULK_LOG_SIZE            = 100
+	BULK_LOG_TIMEOUT         = 3 * time.Second
+	DEFAULT_DOWNLOAD_TIMEOUT = 10 * time.Second
+
+	GEOIP_DOWNLOAD_URL      = "https://raw.githubusercontent.com/P3TERX/GeoLite.mmdb/download/GeoLite2-Country.mmdb"
+	GEOIP_DATABASE_FILENAME = "GeoLite2-Country.mmdb"
 )

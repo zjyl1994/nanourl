@@ -10,6 +10,7 @@ func Run(listen string) error {
 
 	adminG := app.Group("/admin")
 	adminG.Post("/create", admin.CreateUrlHandler)
+	adminG.Get("/log", admin.ListLogHandler)
 
 	app.Get("/:code", RedirectHandler)
 
