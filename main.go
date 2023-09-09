@@ -52,11 +52,23 @@ func main() {
 		log.Fatalln(err.Error())
 	}
 
-	geoipDBFile := filepath.Join(vars.DataDir, vars.GEOIP_DATABASE_FILENAME)
-	if !util.FileExist(geoipDBFile) {
-		if err := util.HttpDownload(vars.GEOIP_DOWNLOAD_URL, geoipDBFile, vars.DEFAULT_DOWNLOAD_TIMEOUT); err != nil {
-			log.Fatalln(err.Error())
-		}
+	err = util.DownloadIfNotExist(vars.GEOIP_DOWNLOAD_URL, filepath.Join(vars.DataDir, vars.GEOIP_DATABASE_FILENAME))
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+
+	err = util.DownloadIfNotExist(vars.GEOIP_EMOJI_URL, filepath.Join(vars.DataDir, vars.GEOIP_EMOJI_FILENAME))
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+
+	vars.GeoCountry = make(map[string]vars.GeoCountryItem)
+	emojiItems, err := util.LoadJson[[]vars.GeoCountryItem](filepath.Join(vars.DataDir, vars.GEOIP_EMOJI_FILENAME))
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+	for _, v := range emojiItems {
+		vars.GeoCountry[v.Code] = v
 	}
 	// init database
 	vars.DB, err = gorm.Open(sqlite.Open(filepath.Join(vars.DataDir, "nanourl.sqlite")))

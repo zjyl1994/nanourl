@@ -14,8 +14,9 @@ var (
 	BaseUrl      string
 	RealIpHeader string
 
-	DB        *gorm.DB
-	CodeCache *lru.TwoQueueCache[string, val_obj.URLObject]
+	DB         *gorm.DB
+	CodeCache  *lru.TwoQueueCache[string, val_obj.URLObject]
+	GeoCountry map[string]GeoCountryItem
 )
 
 const (
@@ -31,4 +32,14 @@ const (
 
 	GEOIP_DOWNLOAD_URL      = "https://raw.githubusercontent.com/P3TERX/GeoLite.mmdb/download/GeoLite2-Country.mmdb"
 	GEOIP_DATABASE_FILENAME = "GeoLite2-Country.mmdb"
+	GEOIP_EMOJI_URL         = "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/index.json"
+	GEOIP_EMOJI_FILENAME    = "flag-emoji.json"
 )
+
+type GeoCountryItem struct {
+	Name    string `json:"name"`
+	Code    string `json:"code"`
+	Emoji   string `json:"emoji"`
+	Unicode string `json:"unicode"`
+	Image   string `json:"image"`
+}

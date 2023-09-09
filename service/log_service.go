@@ -96,11 +96,19 @@ func (LogService) List(urlId, page, pageSize int) ([]val_obj.AccessLog, int64, e
 
 	var results []val_obj.AccessLog
 	for _, v := range datas {
+		var country string
+		if v.UserCountry != "" {
+			if c, ok := vars.GeoCountry[v.UserCountry]; ok {
+				country = c.Emoji + " " + c.Name
+			} else {
+				country = v.UserCountry
+			}
+		}
 		results = append(results, val_obj.AccessLog{
 			UrlId:       v.UrlId,
 			Referrer:    v.Referrer,
 			UserIp:      v.UserIp,
-			UserCountry: v.UserCountry,
+			UserCountry: country,
 			UserAgent:   v.UserAgent,
 			AccessTime:  v.CreatedAt.Unix(),
 		})

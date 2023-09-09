@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/zjyl1994/nanourl/vars"
 )
 
 func HttpDownload(remoteUrl, localPath string, timeout time.Duration) error {
@@ -21,4 +23,11 @@ func HttpDownload(remoteUrl, localPath string, timeout time.Duration) error {
 	defer f.Close()
 	_, err = io.Copy(f, resp.Body)
 	return err
+}
+
+func DownloadIfNotExist(remoteUrl, localPath string) error {
+	if FileExist(localPath) {
+		return nil
+	}
+	return HttpDownload(remoteUrl, localPath, vars.DEFAULT_DOWNLOAD_TIMEOUT)
 }
