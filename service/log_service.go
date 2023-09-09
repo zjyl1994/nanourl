@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"net"
 	"path/filepath"
 	"sync"
@@ -29,6 +28,12 @@ func (s LogService) AddLog(val val_obj.AccessLog) {
 }
 
 func (LogService) backgroundLogWorker() {
+	geodb, err := geoip2.Open(filepath.Join(vars.DataDir, vars.GEOIP_DATABASE_FILENAME))
+	if err == nil {
+		defer geodb.Close()
+	} else {
+		log.Errorln(err.Error())
+	}
 	for {
 		items, length, _, ok := lo.BufferWithTimeout(backgroundLogChan, vars.BULK_LOG_SIZE, vars.BULK_LOG_TIMEOUT)
 		if length == 0 {
@@ -36,10 +41,11 @@ func (LogService) backgroundLogWorker() {
 		}
 		models := lo.Map(items, func(v val_obj.AccessLog, _ int) db_model.AccessLog {
 			return db_model.AccessLog{
-				UrlId:     v.UrlId,
-				Referrer:  v.Referrer,
-				UserIp:    v.UserIp,
-				UserAgent: v.UserAgent,
+				UrlId:       v.UrlId,
+				Referrer:    v.Referrer,
+				UserIp:      v.UserIp,
+				UserAgent:   v.UserAgent,
+				UserCountry: getIPCountry(geodb, v.UserIp),
 			}
 		})
 		err := vars.DB.CreateInBatches(models, vars.BULK_LOG_SIZE).Error
@@ -52,58 +58,53 @@ func (LogService) backgroundLogWorker() {
 	}
 }
 
-func (LogService) List(page, pageSize int) ([]val_obj.AccessLog, int64, error) {
+func getIPCountry(geodb *geoip2.Reader, ip string) string {
+	if geodb != nil {
+		ipAddr := net.ParseIP(ip)
+		if ipAddr != nil {
+			r, err := geodb.Country(ipAddr)
+			if err == nil {
+				return r.Country.IsoCode
+			}
+		}
+	}
+	return ""
+}
+
+func (LogService) List(urlId, page, pageSize int) ([]val_obj.AccessLog, int64, error) {
 	var totalCount int64
 	var datas []db_model.AccessLog
 
-	err := vars.DB.Model(&db_model.AccessLog{}).Count(&totalCount).Error
+	countQuery := vars.DB.Model(&db_model.AccessLog{})
+	if urlId > 0 {
+		countQuery = countQuery.Where("url_id = ?", urlId)
+	}
+	err := countQuery.Count(&totalCount).Error
 	if err != nil {
 		return nil, 0, err
 	}
 
 	limit, offset := util.PageHelper(page, pageSize)
-	err = vars.DB.Limit(limit).Offset(offset).Find(&datas).Error
+	dataQuery := vars.DB.Limit(limit).Offset(offset)
+	if urlId > 0 {
+		dataQuery = dataQuery.Where("url_id = ?", urlId)
+	}
+	err = dataQuery.Find(&datas).Error
 	if err != nil {
 		return nil, 0, err
 	}
 
-	results, err := dbAccessLog2valobj(datas)
-	if err != nil {
-		return nil, 0, err
+	var results []val_obj.AccessLog
+	for _, v := range datas {
+		results = append(results, val_obj.AccessLog{
+			UrlId:       v.UrlId,
+			Referrer:    v.Referrer,
+			UserIp:      v.UserIp,
+			UserCountry: v.UserCountry,
+			UserAgent:   v.UserAgent,
+			AccessTime:  v.CreatedAt.Unix(),
+		})
 	}
 
 	return results, totalCount, nil
-}
-
-func dbAccessLog2valobj(inputs []db_model.AccessLog) ([]val_obj.AccessLog, error) {
-	geodb, err := geoip2.Open(filepath.Join(vars.DataDir, vars.GEOIP_DATABASE_FILENAME))
-	if err != nil {
-		return nil, err
-	}
-	defer geodb.Close()
-	result := make([]val_obj.AccessLog, 0)
-	for _, v := range inputs {
-		var userLocation string
-		if v.UserIp != "" {
-			if ip := net.ParseIP(v.UserIp); ip != nil {
-				if r, err := geodb.Country(ip); err == nil {
-					code := r.Country.IsoCode
-					if code != "" {
-						name := r.Country.Names["en"]
-						emoji := string('🇦'+rune(code[0])-'A') + string('🇦'+rune(code[1])-'A')
-						userLocation = fmt.Sprintf("%s %s (%s)", emoji, name, code)
-					}
-				}
-			}
-		}
-		result = append(result, val_obj.AccessLog{
-			UrlId:        v.UrlId,
-			Referrer:     v.Referrer,
-			UserIp:       v.UserIp,
-			UserLocation: userLocation,
-			UserAgent:    v.UserAgent,
-			AccessTime:   v.CreatedAt,
-		})
-	}
-	return result, nil
 }

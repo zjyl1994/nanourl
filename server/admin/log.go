@@ -9,7 +9,7 @@ import (
 func ListLogHandler(c *fiber.Ctx) error {
 	page, pageSize := util.PageNormalize(c.QueryInt("page"), c.QueryInt("size"))
 	var logSvc service.LogService
-	logs, total, err := logSvc.List(page, pageSize)
+	logs, total, err := logSvc.List(c.QueryInt("id"), page, pageSize)
 	if err != nil {
 		return err
 	}
