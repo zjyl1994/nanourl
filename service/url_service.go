@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 
+	"github.com/samber/lo"
 	"github.com/zjyl1994/nanourl/model/db_model"
 	"github.com/zjyl1994/nanourl/model/val_obj"
 	"github.com/zjyl1994/nanourl/util"
@@ -43,7 +44,7 @@ func (URLService) New(val val_obj.URLObject) (uint, string, error) {
 	return 0, "", ErrCodeExhausted
 }
 
-func (URLService) GetById(id uint) (*db_model.URLObject, error) {
+func (URLService) GetById(id uint) (*val_obj.URLObject, error) {
 	var m db_model.URLObject
 	err := vars.DB.First(&m, "id = ?", id).Error
 	if err != nil {
@@ -52,10 +53,15 @@ func (URLService) GetById(id uint) (*db_model.URLObject, error) {
 		}
 		return nil, err
 	}
-	return &m, nil
+	return &val_obj.URLObject{
+		Id:         m.ID,
+		LongURL:    m.URL,
+		ShortCode:  m.Code,
+		CreateTime: m.CreatedAt,
+	}, nil
 }
 
-func (URLService) List(page, pageSize int) ([]db_model.URLObject, int64, error) {
+func (URLService) List(page, pageSize int) ([]val_obj.URLObject, int64, error) {
 	var totalCount int64
 	var datas []db_model.URLObject
 
@@ -69,10 +75,17 @@ func (URLService) List(page, pageSize int) ([]db_model.URLObject, int64, error) 
 	if err != nil {
 		return nil, 0, err
 	}
-	return datas, totalCount, nil
+	return lo.Map(datas, func(x db_model.URLObject, _ int) val_obj.URLObject {
+		return val_obj.URLObject{
+			Id:         x.ID,
+			LongURL:    x.URL,
+			ShortCode:  x.Code,
+			CreateTime: x.CreatedAt,
+		}
+	}), totalCount, nil
 }
 
-func (URLService) GetByCode(code string) (*db_model.URLObject, error) {
+func (URLService) GetByCode(code string) (*val_obj.URLObject, error) {
 	var m db_model.URLObject
 	err := vars.DB.First(&m, "code = ?", code).Error
 	if err != nil {
@@ -81,7 +94,12 @@ func (URLService) GetByCode(code string) (*db_model.URLObject, error) {
 		}
 		return nil, err
 	}
-	return &m, nil
+	return &val_obj.URLObject{
+		Id:         m.ID,
+		LongURL:    m.URL,
+		ShortCode:  m.Code,
+		CreateTime: m.CreatedAt,
+	}, nil
 }
 
 func (s URLService) SearchCode(code string) (val_obj.URLObject, error) {
@@ -92,13 +110,14 @@ func (s URLService) SearchCode(code string) (val_obj.URLObject, error) {
 			return s.GetByCode(code)
 		})
 		if err != nil {
-			return val_obj.URLObject{}, nil
+			return val_obj.URLObject{}, err
 		}
 		urlObj := result.(*db_model.URLObject)
 		val := val_obj.URLObject{
-			Id:        urlObj.ID,
-			LongURL:   urlObj.URL,
-			ShortCode: urlObj.Code,
+			Id:         urlObj.ID,
+			LongURL:    urlObj.URL,
+			ShortCode:  urlObj.Code,
+			CreateTime: urlObj.CreatedAt,
 		}
 		vars.CodeCache.Add(code, val)
 		return val, nil

@@ -25,6 +25,7 @@ func main() {
 	vars.DataDir = os.Getenv("NANOURL_PATH")
 	vars.BaseUrl = os.Getenv("NANOURL_BASEURL")
 	vars.RealIpHeader = os.Getenv("NANOURL_REAL_IP_HEADER")
+	vars.HomepageUrl = os.Getenv("NANOURL_HOMEPAGE")
 
 	if vars.Listen == "" {
 		vars.Listen = vars.DEFAULT_LISTEN

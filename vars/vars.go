@@ -13,6 +13,7 @@ var (
 	DataDir      string
 	BaseUrl      string
 	RealIpHeader string
+	HomepageUrl  string
 
 	DB         *gorm.DB
 	CodeCache  *lru.TwoQueueCache[string, val_obj.URLObject]

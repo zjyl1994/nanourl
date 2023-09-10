@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log - Nanourl</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <style>
+        body {
+            max-width: 1000px;
+        }
+    </style>
+</head>
+
+<body>
+    <table>
+        <tr>
+            <th>Time</th>
+            <th>IP</th>
+            <th>Country</th>
+            <th>Referrer</th>
+            <th>UserAgent</th>
+        </tr>
+        {{range .list}}
+        <tr>
+            <td>{{timef .AccessTime}}</td>
+            <td>{{.UserIp}}</td>
+            <td>{{.UserCountry}}</td>
+            <td>{{.Referrer}}</td>
+            <td>{{.UserAgent}}</td>
+        </tr>
+        {{end}}
+    </table>
+</body>
+
+</html>

@@ -17,7 +17,7 @@ func RedirectHandler(c *fiber.Ctx) error {
 	obj, err := urlSvc.SearchCode(shortCode)
 	if err != nil {
 		if err == service.ErrCodeNotFound {
-			return fiber.ErrNotFound
+			return c.Status(fiber.StatusNotFound).SendString("url not found or expired")
 		}
 		return err
 	}

@@ -6,15 +6,12 @@ import (
 	"github.com/zjyl1994/nanourl/util"
 )
 
-func ListLogHandler(c *fiber.Ctx) error {
+func ListLogPage(c *fiber.Ctx) error {
 	page, pageSize := util.PageNormalize(c.QueryInt("page"), c.QueryInt("size"))
 	var logSvc service.LogService
 	logs, total, err := logSvc.List(c.QueryInt("id"), page, pageSize)
 	if err != nil {
 		return err
 	}
-	return c.JSON(fiber.Map{
-		"total": total,
-		"logs":  logs,
-	})
+	return c.Render("admin/log", fiber.Map{"list": logs, "total": total})
 }

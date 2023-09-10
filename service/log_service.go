@@ -110,7 +110,7 @@ func (LogService) List(urlId, page, pageSize int) ([]val_obj.AccessLog, int64, e
 			UserIp:      v.UserIp,
 			UserCountry: country,
 			UserAgent:   v.UserAgent,
-			AccessTime:  v.CreatedAt.Unix(),
+			AccessTime:  v.CreatedAt,
 		})
 	}
 
