@@ -2,6 +2,7 @@ package admin
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/samber/lo"
 	"github.com/zjyl1994/nanourl/model/val_obj"
 	"github.com/zjyl1994/nanourl/service"
 	"github.com/zjyl1994/nanourl/util"
@@ -40,5 +41,12 @@ func ListUrlPage(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return c.Render("admin/list", fiber.Map{"list": data, "total": total})
+	var logsvc service.LogService
+	logCount, err := logsvc.CountLog(lo.Map(data, func(x val_obj.URLObject, _ int) int {
+		return int(x.Id)
+	}))
+	if err != nil {
+		return err
+	}
+	return c.Render("admin/list", fiber.Map{"list": data, "total": total, "logc": logCount})
 }

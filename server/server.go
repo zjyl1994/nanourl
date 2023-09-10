@@ -16,6 +16,7 @@ var faviconData []byte
 
 func Run(listen string) error {
 	engine := html.New("./views", ".html")
+	engine.Reload(true)
 	engine.AddFuncMap(map[string]interface{}{
 		"timef": util.FormatTime,
 	})

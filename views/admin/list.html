@@ -20,7 +20,7 @@
             <td>{{.LongURL}}</td>
             <td>{{timef .CreateTime}}</td>
             <td>
-                <a href="log?id={{.Id}}">Log</a>
+                <a href="log?id={{.Id}}">Log ({{index $.logc .Id}})</a>
             </td>
         </tr>
         {{end}}

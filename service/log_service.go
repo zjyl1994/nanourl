@@ -116,3 +116,16 @@ func (LogService) List(urlId, page, pageSize int) ([]val_obj.AccessLog, int64, e
 
 	return results, totalCount, nil
 }
+
+func (LogService) CountLog(urlid []int) (map[int]int, error) {
+	type resultContainer struct {
+		UrlId int `gorm:"column:url_id"`
+		Total int `gorm:"total"`
+	}
+	var result []resultContainer
+	err := vars.DB.Model(&db_model.AccessLog{}).Select("url_id,count(*) as total").Where("url_id IN (?)", urlid).Group("url_id").Find(&result).Error
+	if err != nil {
+		return nil, err
+	}
+	return lo.SliceToMap(result, func(x resultContainer) (int, int) { return x.UrlId, x.Total }), nil
+}
