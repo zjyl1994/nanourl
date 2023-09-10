@@ -18,7 +18,8 @@ func Run(listen string) error {
 	engine := html.New("./views", ".html")
 	engine.Reload(true)
 	engine.AddFuncMap(map[string]interface{}{
-		"timef": util.FormatTime,
+		"time_f":      util.FormatTime,
+		"null_time_f": util.FormatNullableTime,
 	})
 
 	app := fiber.New(fiber.Config{

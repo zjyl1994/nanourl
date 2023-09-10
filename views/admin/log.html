@@ -10,6 +10,10 @@
         body {
             max-width: 1000px;
         }
+
+        table {
+            overflow-x: auto;
+        }
     </style>
 </head>
 
@@ -24,7 +28,7 @@
         </tr>
         {{range .list}}
         <tr>
-            <td>{{timef .AccessTime}}</td>
+            <td>{{time_f .AccessTime}}</td>
             <td>{{.UserIp}}</td>
             <td>{{.UserCountry}}</td>
             <td>{{.Referrer}}</td>

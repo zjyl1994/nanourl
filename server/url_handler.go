@@ -1,6 +1,8 @@
 package server
 
 import (
+	"time"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/zjyl1994/nanourl/model/val_obj"
 	"github.com/zjyl1994/nanourl/service"
@@ -20,6 +22,11 @@ func RedirectHandler(c *fiber.Ctx) error {
 			return c.Status(fiber.StatusNotFound).SendString("url not found or expired")
 		}
 		return err
+	}
+
+	if !obj.Enabled ||
+		(obj.ExpireTime.Valid && obj.ExpireTime.Time.After(time.Now())) {
+		return c.Status(fiber.StatusNotFound).SendString("url not found or expired")
 	}
 
 	var logSvc service.LogService

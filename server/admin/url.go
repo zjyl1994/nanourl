@@ -1,6 +1,9 @@
 package admin
 
 import (
+	"database/sql"
+	"time"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/samber/lo"
 	"github.com/zjyl1994/nanourl/model/val_obj"
@@ -10,8 +13,9 @@ import (
 )
 
 type createUrlReqForm struct {
-	LongUrl   string `form:"long_url"`
-	ShortCode string `form:"short_code"`
+	LongUrl      string `form:"long_url"`
+	ShortCode    string `form:"short_code"`
+	ExpireSecond int    `form:"expire_sec"`
 }
 
 func CreateUrlHandler(c *fiber.Ctx) error {
@@ -22,12 +26,16 @@ func CreateUrlHandler(c *fiber.Ctx) error {
 	if len(req.LongUrl) == 0 {
 		return fiber.ErrBadRequest
 	}
-
-	var svc service.URLService
-	_, shortCode, err := svc.New(val_obj.URLObject{
+	valobj := val_obj.URLObject{
 		LongURL:   req.LongUrl,
 		ShortCode: req.ShortCode,
-	})
+	}
+	if req.ExpireSecond > 0 {
+		valobj.ExpireTime = sql.NullTime{Time: time.Now().Add(time.Duration(req.ExpireSecond) * time.Second), Valid: true}
+	}
+
+	var svc service.URLService
+	_, shortCode, err := svc.New(valobj)
 	if err != nil {
 		return err
 	}
@@ -48,5 +56,5 @@ func ListUrlPage(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return c.Render("admin/list", fiber.Map{"list": data, "total": total, "logc": logCount})
+	return c.Render("admin/list", fiber.Map{"list": data, "total": total, "base_url": vars.BaseUrl, "logc": logCount})
 }

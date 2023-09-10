@@ -27,6 +27,8 @@ func (URLService) New(val val_obj.URLObject) (uint, string, error) {
 		} else {
 			m.Code = util.RandString(vars.SHORT_CODE_SIZE)
 		}
+		m.ExpireAt = val.ExpireTime
+		m.Enabled = true
 
 		err := vars.DB.Create(&m).Error
 		if err == nil {
@@ -58,6 +60,8 @@ func (URLService) GetById(id uint) (*val_obj.URLObject, error) {
 		LongURL:    m.URL,
 		ShortCode:  m.Code,
 		CreateTime: m.CreatedAt,
+		ExpireTime: m.ExpireAt,
+		Enabled:    m.Enabled,
 	}, nil
 }
 
@@ -81,6 +85,8 @@ func (URLService) List(page, pageSize int) ([]val_obj.URLObject, int64, error) {
 			LongURL:    x.URL,
 			ShortCode:  x.Code,
 			CreateTime: x.CreatedAt,
+			ExpireTime: x.ExpireAt,
+			Enabled:    x.Enabled,
 		}
 	}), totalCount, nil
 }
@@ -99,6 +105,8 @@ func (URLService) GetByCode(code string) (*val_obj.URLObject, error) {
 		LongURL:    m.URL,
 		ShortCode:  m.Code,
 		CreateTime: m.CreatedAt,
+		ExpireTime: m.ExpireAt,
+		Enabled:    m.Enabled,
 	}, nil
 }
 
@@ -118,6 +126,8 @@ func (s URLService) SearchCode(code string) (val_obj.URLObject, error) {
 			LongURL:    urlObj.URL,
 			ShortCode:  urlObj.Code,
 			CreateTime: urlObj.CreatedAt,
+			ExpireTime: urlObj.ExpireAt,
+			Enabled:    urlObj.Enabled,
 		}
 		vars.CodeCache.Add(code, val)
 		return val, nil
