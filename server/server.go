@@ -32,6 +32,7 @@ func Run(listen string) error {
 	adminG.Post("/create", admin.CreateUrlHandler)
 	adminG.Get("/log", admin.ListLogPage)
 	adminG.Get("/url", admin.ListUrlPage)
+	adminG.Get("/qrcode", admin.GenQRCodeHandler)
 
 	app.Get("/", indexHandler)
 	app.Get("/:code", RedirectHandler)

@@ -6,6 +6,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/samber/lo"
+	qrcode "github.com/skip2/go-qrcode"
 	"github.com/zjyl1994/nanourl/model/val_obj"
 	"github.com/zjyl1994/nanourl/service"
 	"github.com/zjyl1994/nanourl/util"
@@ -57,4 +58,18 @@ func ListUrlPage(c *fiber.Ctx) error {
 		return err
 	}
 	return c.Render("admin/list", fiber.Map{"list": data, "total": total, "base_url": vars.BaseUrl, "logc": logCount})
+}
+
+func GenQRCodeHandler(c *fiber.Ctx) error {
+	shortCode := c.Query("code")
+	if shortCode == "" {
+		return fiber.ErrBadRequest
+	}
+	targetUrl := vars.BaseUrl + shortCode
+	png, err := qrcode.Encode(targetUrl, qrcode.Medium, 256)
+	if err != nil {
+		return err
+	}
+	c.Set(fiber.HeaderContentType, "image/png")
+	return c.Send(png)
 }
