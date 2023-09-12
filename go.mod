@@ -11,6 +11,7 @@ require (
 	github.com/oschwald/geoip2-golang v1.9.0
 	github.com/samber/lo v1.38.1
 	github.com/sirupsen/logrus v1.9.3
+	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 	golang.org/x/sync v0.3.0
 	gorm.io/driver/sqlite v1.5.3
 	gorm.io/gorm v1.25.4
@@ -29,7 +30,6 @@ require (
 	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/oschwald/maxminddb-golang v1.11.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
-	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.49.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
