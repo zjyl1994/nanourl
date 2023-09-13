@@ -13,5 +13,5 @@ func ListLogPage(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return c.Render("admin/log", fiber.Map{"list": logs, "total": total})
+	return c.Render("log", fiber.Map{"list": logs, "total": total})
 }

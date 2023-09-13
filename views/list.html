@@ -1,0 +1,40 @@
+{{define "PageTitle"}}List of urls{{end}}
+
+<div class="container">
+    <h1>List of Urls</h1>
+    <div class="table-responsive">
+        <table class="table">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">Code</th>
+                    <th scope="col">Target</th>
+                    <th scope="col">Create At</th>
+                    <th scope="col">Expire At</th>
+                    <th scope="col">Operation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .list}}
+                <tr>
+                    <td><a href="{{$.base_url}}{{.ShortCode}}">{{.ShortCode}}</a></td>
+                    <td><a href="{{.LongURL}}">{{.LongURL}}</a></td>
+                    <td>{{time_f .CreateTime}}</td>
+                    <td>{{null_time_f .ExpireTime}}</td>
+                    <td>
+                        <a href="log?id={{.Id}}">Log ({{index $.logc .Id}})</a>
+                        {{if .Enabled}}
+                        <a href="#">Disable</a>
+                        {{else}}
+                        <a href="#">Enable</a>
+                        {{end}}
+                    </td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    document.getElementById('navlink-url').classList.add('active');
+</script>

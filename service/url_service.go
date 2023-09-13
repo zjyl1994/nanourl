@@ -120,16 +120,8 @@ func (s URLService) SearchCode(code string) (val_obj.URLObject, error) {
 		if err != nil {
 			return val_obj.URLObject{}, err
 		}
-		urlObj := result.(*db_model.URLObject)
-		val := val_obj.URLObject{
-			Id:         urlObj.ID,
-			LongURL:    urlObj.URL,
-			ShortCode:  urlObj.Code,
-			CreateTime: urlObj.CreatedAt,
-			ExpireTime: urlObj.ExpireAt,
-			Enabled:    urlObj.Enabled,
-		}
-		vars.CodeCache.Add(code, val)
-		return val, nil
+		valObj := result.(*val_obj.URLObject)
+		vars.CodeCache.Add(code, *valObj)
+		return *valObj, nil
 	}
 }

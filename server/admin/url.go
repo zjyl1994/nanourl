@@ -57,7 +57,7 @@ func ListUrlPage(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return c.Render("admin/list", fiber.Map{"list": data, "total": total, "base_url": vars.BaseUrl, "logc": logCount})
+	return c.Render("list", fiber.Map{"list": data, "total": total, "base_url": vars.BaseUrl, "logc": logCount})
 }
 
 func GenQRCodeHandler(c *fiber.Ctx) error {

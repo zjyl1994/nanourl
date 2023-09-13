@@ -76,19 +76,15 @@ func (LogService) List(urlId, page, pageSize int) ([]val_obj.AccessLog, int64, e
 	var datas []db_model.AccessLog
 
 	countQuery := vars.DB.Model(&db_model.AccessLog{})
-	if urlId > 0 {
-		countQuery = countQuery.Where("url_id = ?", urlId)
-	}
+	countQuery = countQuery.Where("url_id = ?", urlId)
 	err := countQuery.Count(&totalCount).Error
 	if err != nil {
 		return nil, 0, err
 	}
 
 	limit, offset := util.PageHelper(page, pageSize)
-	dataQuery := vars.DB.Limit(limit).Offset(offset)
-	if urlId > 0 {
-		dataQuery = dataQuery.Where("url_id = ?", urlId)
-	}
+	dataQuery := vars.DB.Limit(limit).Offset(offset).Order("created_at DESC")
+	dataQuery = dataQuery.Where("url_id = ?", urlId)
 	err = dataQuery.Find(&datas).Error
 	if err != nil {
 		return nil, 0, err

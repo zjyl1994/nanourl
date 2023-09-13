@@ -24,6 +24,7 @@ func Run(listen string) error {
 
 	app := fiber.New(fiber.Config{
 		Views:        engine,
+		ViewsLayout:  "layout",
 		ServerHeader: "Nanourl",
 	})
 	app.Use(favicon.New(favicon.Config{Data: faviconData}))
