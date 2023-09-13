@@ -75,7 +75,7 @@ func (URLService) List(page, pageSize int) ([]val_obj.URLObject, int64, error) {
 	}
 
 	limit, offset := util.PageHelper(page, pageSize)
-	err = vars.DB.Limit(limit).Offset(offset).Find(&datas).Error
+	err = vars.DB.Limit(limit).Offset(offset).Order("created_at DESC").Find(&datas).Error
 	if err != nil {
 		return nil, 0, err
 	}

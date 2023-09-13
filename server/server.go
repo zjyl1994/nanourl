@@ -31,9 +31,13 @@ func Run(listen string) error {
 
 	adminG := app.Group("/admin")
 	adminG.Post("/create", admin.CreateUrlHandler)
-	adminG.Get("/log", admin.ListLogPage)
-	adminG.Get("/url", admin.ListUrlPage)
+	adminG.Get("/log", showPage("log"))
+	adminG.Get("/url", showPage("list"))
 	adminG.Get("/qrcode", admin.GenQRCodeHandler)
+
+	apiG := adminG.Group("/api")
+	apiG.Get("/log", admin.ListLogHandler)
+	apiG.Get("/url", admin.ListUrlHandler)
 
 	app.Get("/", indexHandler)
 	app.Get("/:code", RedirectHandler)
@@ -46,4 +50,10 @@ func indexHandler(c *fiber.Ctx) error {
 		return c.Redirect(vars.HomepageUrl)
 	}
 	return c.Redirect("admin/url")
+}
+
+func showPage(name string, layout ...string) func(*fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		return c.Render(name, fiber.Map{}, layout...)
+	}
 }

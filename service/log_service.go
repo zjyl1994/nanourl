@@ -92,19 +92,11 @@ func (LogService) List(urlId, page, pageSize int) ([]val_obj.AccessLog, int64, e
 
 	var results []val_obj.AccessLog
 	for _, v := range datas {
-		var country string
-		if v.UserCountry != "" {
-			if c, ok := vars.GeoCountry[v.UserCountry]; ok {
-				country = c.Emoji + " " + c.Name
-			} else {
-				country = v.UserCountry
-			}
-		}
 		results = append(results, val_obj.AccessLog{
 			UrlId:       v.UrlId,
 			Referrer:    v.Referrer,
 			UserIp:      v.UserIp,
-			UserCountry: country,
+			UserCountry: v.UserCountry,
 			UserAgent:   v.UserAgent,
 			AccessTime:  v.CreatedAt,
 		})
@@ -113,15 +105,15 @@ func (LogService) List(urlId, page, pageSize int) ([]val_obj.AccessLog, int64, e
 	return results, totalCount, nil
 }
 
-func (LogService) CountLog(urlid []int) (map[int]int, error) {
+func (LogService) CountLog(urlid []int) (map[uint]int, error) {
 	type resultContainer struct {
-		UrlId int `gorm:"column:url_id"`
-		Total int `gorm:"total"`
+		UrlId uint `gorm:"column:url_id"`
+		Total int  `gorm:"total"`
 	}
 	var result []resultContainer
 	err := vars.DB.Model(&db_model.AccessLog{}).Select("url_id,count(*) as total").Where("url_id IN (?)", urlid).Group("url_id").Find(&result).Error
 	if err != nil {
 		return nil, err
 	}
-	return lo.SliceToMap(result, func(x resultContainer) (int, int) { return x.UrlId, x.Total }), nil
+	return lo.SliceToMap(result, func(x resultContainer) (uint, int) { return x.UrlId, x.Total }), nil
 }

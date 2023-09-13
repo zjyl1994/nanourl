@@ -7,6 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/samber/lo"
 	qrcode "github.com/skip2/go-qrcode"
+	"github.com/zjyl1994/nanourl/model/render_obj"
 	"github.com/zjyl1994/nanourl/model/val_obj"
 	"github.com/zjyl1994/nanourl/service"
 	"github.com/zjyl1994/nanourl/util"
@@ -43,7 +44,7 @@ func CreateUrlHandler(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).SendString(vars.BaseUrl + shortCode)
 }
 
-func ListUrlPage(c *fiber.Ctx) error {
+func ListUrlHandler(c *fiber.Ctx) error {
 	page, pageSize := util.PageNormalize(c.QueryInt("page"), c.QueryInt("size"))
 	var svc service.URLService
 	data, total, err := svc.List(page, pageSize)
@@ -57,7 +58,25 @@ func ListUrlPage(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return c.Render("list", fiber.Map{"list": data, "total": total, "base_url": vars.BaseUrl, "logc": logCount})
+	list := make([]render_obj.URLObject, len(data))
+	for i, v := range data {
+		list[i] = render_obj.URLObject{
+			Id:         v.Id,
+			LongURL:    v.LongURL,
+			ShortCode:  v.ShortCode,
+			CreateTime: v.CreateTime.Unix(),
+			ExpireTime: lo.Ternary(v.ExpireTime.Valid, v.ExpireTime.Time.Unix(), 0),
+			Enabled:    v.Enabled,
+			ClickCount: lo.ValueOr(logCount, v.Id, 0),
+			HrefLink:   vars.BaseUrl + v.ShortCode,
+		}
+	}
+	return c.JSON(fiber.Map{
+		"list":       list,
+		"page":       page,
+		"page_size":  pageSize,
+		"total_rows": total,
+	})
 }
 
 func GenQRCodeHandler(c *fiber.Ctx) error {
