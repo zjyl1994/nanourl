@@ -8,6 +8,7 @@
     <title>Nanourl</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.10.5/dist/cdn.min.js" defer></script>
+    <!-- <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.3.5/dist/alpine.min.js" defer></script> -->
 </head>
 
 <body>
@@ -25,7 +26,7 @@
                 </a>
             </div>
     
-            <div class="navbar-menu" :class="{ 'is-active': isOpen }" @click.away="isOpen = false">
+            <div class="navbar-menu" :class="{ 'is-active': isOpen }" @click.outside="isOpen = false">
                 <div class="navbar-start">
                 </div>
     
