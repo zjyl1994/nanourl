@@ -16,13 +16,13 @@
                     <tr>
                         <td><a :href="item.href_link" x-text="item.short_code"></a></td>
                         <td><a :href="item.long_url" x-text="item.long_url"></a></td>
-                        <td><a :href="`log?id=${item.id}`" x-text="item.click_count"></a></td>
+                        <td><a :href="`/admin/log?id=${item.id}`" x-text="item.click_count"></a></td>
                         <td x-text="format_ts(item.create_time)"></td>
                         <td x-text="item.expire_time == 0?'Never':format_ts(item.expire_time)"></td>
                         <td>
-                            <button class="button" x-text="item.enabled?'Disable':'Enable'"></button>
-                            <button class="button">Edit</button>
-                            <button class="button">Delete</button>
+                            <button class="button is-small" x-text="item.enabled?'Disable':'Enable'"></button>
+                            <button class="button is-small">Edit</button>
+                            <button class="button is-small">Delete</button>
                         </td>
                     </tr>
                 </template>
@@ -42,15 +42,12 @@
                 total_rows: 0,
             },
             init: function () {
-                let params = (new URL(document.location)).searchParams;
-                let page = params.get("page");
-                let page_size = params.get("size");
-                page = page ? page : 1;
-                page_size = page_size ? page_size : 10;
+                let page = get_page_param("page", 1);
+                let page_size = get_page_param("size", 10);
                 this.load_data(page, page_size);
             },
             load_data: function (page, size) {
-                fetch(`api/url?page=${page}&size=${size}`).
+                fetch(`/admin/api/url?page=${page}&size=${size}`).
                     then(resp => resp.json()).
                     then(res => this.table = res).
                     catch(err => alert(err));

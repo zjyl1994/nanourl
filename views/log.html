@@ -39,17 +39,13 @@
                 total_rows: 0,
             },
             init: function () {
-                let params = (new URL(document.location)).searchParams;
-                let page = params.get("page");
-                let page_size = params.get("size");
-                let id = params.get("id");
-                page = page ? page : 1;
-                page_size = page_size ? page_size : 10;
-                id = id ? id : 0;
+                let page = get_page_param("page", 1);
+                let page_size = get_page_param("size", 10);
+                let id = get_page_param("id", 0);
                 this.load_data(id, page, page_size);
             },
             load_data: function (id, page, size) {
-                fetch(`api/log?id=${id}&page=${page}&size=${size}`).
+                fetch(`/admin/api/log?id=${id}&page=${page}&size=${size}`).
                     then(resp => resp.json()).
                     then(res => this.table = res).
                     catch(err => alert(err));

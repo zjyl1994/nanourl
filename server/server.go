@@ -32,8 +32,10 @@ func Run(listen string) error {
 	adminG := app.Group("/admin")
 	adminG.Static("/static", "./static")
 	adminG.Post("/create", admin.CreateUrlHandler)
+	adminG.Get("/new", showPage("new"))
 	adminG.Get("/log", showPage("log"))
 	adminG.Get("/url", showPage("list"))
+	adminG.Get("/stat", admin.StatisticsPage)
 	adminG.Get("/qrcode", admin.GenQRCodeHandler)
 
 	apiG := adminG.Group("/api")
