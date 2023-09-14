@@ -1,5 +1,4 @@
 <div class="container" x-data="data()">
-    <h1 class="is-size-1">List of URLs</h1>
     <div class="table-container">
         <table class="table is-fullwidth">
             <thead>
@@ -55,17 +54,6 @@
                     then(resp => resp.json()).
                     then(res => this.table = res).
                     catch(err => alert(err));
-            },
-            format_ts: function (timestamp) {
-                const pad2 = (num) => num < 10 ? '0' + num : num;
-                let date = new Date(timestamp * 1000);
-                let year = date.getFullYear();
-                let month = pad2(date.getMonth() + 1);
-                let day = pad2(date.getDate());
-                let hour = pad2(date.getHours());
-                let minute = pad2(date.getMinutes());
-                let second = pad2(date.getSeconds());
-                return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
             }
         }
     }

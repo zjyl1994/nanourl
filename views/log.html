@@ -1,8 +1,7 @@
-<div class="container">
-    <h1>Access Log</h1>
-    <div class="table-responsive">
-        <table class="table">
-            <thead class="table-light">
+<div class="container" x-data="data()">
+    <div class="table-container">
+        <table class="table is-fullwidth">
+            <thead>
                 <tr>
                     <th>Time</th>
                     <th>IP</th>
@@ -12,20 +11,49 @@
                 </tr>
             </thead>
             <tbody>
-                {{range .list}}
-                <tr>
-                    <td>{{time_f .AccessTime}}</td>
-                    <td>{{.UserIp}}</td>
-                    <td>{{.UserCountry}}</td>
-                    <td>{{.Referrer}}</td>
-                    <td>{{.UserAgent}}</td>
-                </tr>
-                {{end}}
+                <template x-for="item in table.list">
+                    <tr>
+                        <td x-text="format_ts(item.access_time)"></td>
+                        <td x-text="item.user_ip"></td>
+                        <td>
+                            <span x-text="item.country_emoji"></span>
+                            <span x-text="item.country_name"></span>
+                        </td>
+                        <td x-text="item.referrer"></td>
+                        <td x-text="item.user_agent"></td>
+                    </tr>
+                </template>
             </tbody>
         </table>
     </div>
 </div>
 
 <script>
-    document.title="Logs - Nanourl";
+    document.title = "Logs - Nanourl";
+    function data() {
+        return {
+            table: {
+                list: [],
+                page: 1,
+                page_size: 10,
+                total_rows: 0,
+            },
+            init: function () {
+                let params = (new URL(document.location)).searchParams;
+                let page = params.get("page");
+                let page_size = params.get("size");
+                let id = params.get("id");
+                page = page ? page : 1;
+                page_size = page_size ? page_size : 10;
+                id = id ? id : 0;
+                this.load_data(id, page, page_size);
+            },
+            load_data: function (id, page, size) {
+                fetch(`api/log?id=${id}&page=${page}&size=${size}`).
+                    then(resp => resp.json()).
+                    then(res => this.table = res).
+                    catch(err => alert(err));
+            }
+        }
+    }
 </script>

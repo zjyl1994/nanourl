@@ -30,6 +30,7 @@ func Run(listen string) error {
 	app.Use(favicon.New(favicon.Config{Data: faviconData}))
 
 	adminG := app.Group("/admin")
+	adminG.Static("/static", "./static")
 	adminG.Post("/create", admin.CreateUrlHandler)
 	adminG.Get("/log", showPage("log"))
 	adminG.Get("/url", showPage("list"))

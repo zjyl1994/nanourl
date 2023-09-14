@@ -7,26 +7,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nanourl</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@vizuaalog/bulmajs@0.12.2/dist/bulma.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.10.5/dist/cdn.min.js" defer></script>
-    <!-- <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.3.5/dist/alpine.min.js" defer></script> -->
+    <script src="static/common.js"></script>
 </head>
 
 <body>
-    <nav class="navbar is-black" role="navigation" x-data="{ isOpen: false }">
+    <nav class="navbar is-black" role="navigation">
         <div class="container">
             <div class="navbar-brand">
                 <a class="navbar-item" href="/">
                     Nanourl
                 </a>
     
-                <a role="button" class="navbar-burger burger" @click="isOpen = !isOpen">
+                <a role="button" class="navbar-burger burger">
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
                 </a>
             </div>
     
-            <div class="navbar-menu" :class="{ 'is-active': isOpen }" @click.outside="isOpen = false">
+            <div class="navbar-menu">
                 <div class="navbar-start">
                 </div>
     
