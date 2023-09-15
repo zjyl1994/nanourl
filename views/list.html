@@ -1,33 +1,35 @@
 <div class="container" x-data="data()">
-    <div class="table-container">
-        <table class="table is-fullwidth">
-            <thead>
-                <tr>
-                    <th>Code</th>
-                    <th>Target</th>
-                    <th>Click</th>
-                    <th>Create At</th>
-                    <th>Expired At</th>
-                    <th>Operation</th>
-                </tr>
-            </thead>
-            <tbody>
-                <template x-for="item in table.list">
+    <div class="mx-2">
+        <div class="table-container">
+            <table class="table is-fullwidth">
+                <thead>
                     <tr>
-                        <td><a :href="item.href_link" x-text="item.short_code"></a></td>
-                        <td><a :href="item.long_url" x-text="item.long_url"></a></td>
-                        <td><a :href="`/admin/log?id=${item.id}`" x-text="item.click_count"></a></td>
-                        <td x-text="format_ts(item.create_time)"></td>
-                        <td x-text="item.expire_time == 0?'Never':format_ts(item.expire_time)"></td>
-                        <td>
-                            <button class="button is-small" x-text="item.enabled?'Disable':'Enable'"></button>
-                            <button class="button is-small">Edit</button>
-                            <button class="button is-small">Delete</button>
-                        </td>
+                        <th>Code</th>
+                        <th>Target</th>
+                        <th>Click</th>
+                        <th>Create At</th>
+                        <th>Expired At</th>
+                        <th>Operation</th>
                     </tr>
-                </template>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <template x-for="item in table.list">
+                        <tr>
+                            <td><a :href="item.href_link" x-text="item.short_code"></a></td>
+                            <td><a :href="item.long_url" x-text="item.long_url"></a></td>
+                            <td><a :href="`/admin/log?id=${item.id}`" x-text="item.click_count"></a></td>
+                            <td x-text="format_ts(item.create_time)"></td>
+                            <td x-text="item.expire_time == 0?'Never':format_ts(item.expire_time)"></td>
+                            <td>
+                                <button class="button is-small" x-text="item.enabled?'Disable':'Enable'"></button>
+                                <button class="button is-small">Edit</button>
+                                <button class="button is-small">Delete</button>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 

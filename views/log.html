@@ -1,36 +1,39 @@
 <div class="container" x-data="data()">
-    <div class="table-container">
-        <table class="table is-fullwidth">
-            <thead>
-                <tr>
-                    <th>Time</th>
-                    <th>IP</th>
-                    <th>Country</th>
-                    <th>Referrer</th>
-                    <th>OS</th>
-                    <th>Browser</th>
-                    <th>Device</th>
-                    <th>Platform</th>
-                </tr>
-            </thead>
-            <tbody>
-                <template x-for="item in table.list">
+    <div class="mx-2">
+        <div class="table-container">
+            <table class="table is-fullwidth">
+                <thead>
                     <tr>
-                        <td x-text="format_ts(item.access_time)"></td>
-                        <td x-text="item.user_ip"></td>
-                        <td>
-                            <span x-text="item.country_emoji"></span>
-                            <span x-text="item.country_name"></span>
-                        </td>
-                        <td x-text="item.referrer"></td>
-                        <td x-text="item.os"></td>
-                        <td x-text="item.browser"></td>
-                        <td x-text="item.device"></td>
-                        <td x-text="item.device_type"></td>
+                        <th>Time</th>
+                        <th>IP</th>
+                        <th>Country</th>
+                        <th>Referrer</th>
+                        <th>OS</th>
+                        <th>Browser</th>
+                        <th>Device</th>
+                        <th>Platform</th>
                     </tr>
-                </template>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <template x-for="item in table.list">
+                        <tr>
+                            <td x-text="format_ts(item.access_time)"></td>
+                            <td x-text="item.user_ip"></td>
+                            <td>
+                                <span x-text="item.country_emoji"></span>
+                                &nbsp;
+                                <span x-text="item.country_name"></span>
+                            </td>
+                            <td x-text="item.referrer"></td>
+                            <td x-text="item.os"></td>
+                            <td x-text="item.browser"></td>
+                            <td x-text="item.device"></td>
+                            <td x-text="item.device_type"></td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 

@@ -1,0 +1,82 @@
+<div class="container" x-data="data()">
+    <div class="mx-2">
+        <div class="field">
+            <label class="label">Long Url</label>
+            <div class="control">
+                <input class="input" type="text" x-model="long_url">
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Short Code</label>
+            <div class="control">
+                <input class="input" type="text" x-model="short_code">
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Expire After</label>
+            <div class="control">
+                <div class="select">
+                    <select x-model="expire_sec">
+                        <option value="0" selected>Never</option>
+                        <option value="3600">1 Hour</option>
+                        <option value="7200">2 Hours</option>
+                        <option value="10800">3 Hours</option>
+                        <option value="14400">4 Hours</option>
+                        <option value="21600">6 Hours</option>
+                        <option value="28800">8 Hours</option>
+                        <option value="43200">12 Hours</option>
+                        <option value="86400">1 Day</option>
+                        <option value="259200">3 Day</option>
+                        <option value="604800">7 Day</option>
+                        <option value="2592000">30 Day</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="field">
+            <div class="control">
+                <button class="button is-link" @click="create_link">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.title = "New - Nanourl";
+    function data() {
+        return {
+            long_url: '',
+            short_code: '',
+            expire_sec: 0,
+            create_link: function () {
+                if (this.long_url == '')
+                    return;
+
+                const fd = new FormData();
+                fd.append('long_url', this.long_url);
+
+                if (this.short_code.length > 0)
+                    fd.append('short_code', this.short_code);
+                if (this.expire_sec > 0)
+                    fd.append('expire_sec', this.expire_sec);
+
+                fetch('/admin/create', {
+                    method: 'POST',
+                    body: fd,
+                })
+                    .then(res => res.text())
+                    .then(res => {
+                        alert("OK");
+                        this.long_url = '';
+                        this.short_code = '';
+                        this.expire_sec = 0;
+                    })
+                    .catch(err => alert(err));
+            }
+        }
+    }
+</script>

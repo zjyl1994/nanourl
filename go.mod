@@ -8,6 +8,7 @@ require (
 	github.com/hashicorp/golang-lru/v2 v2.0.6
 	github.com/joho/godotenv v1.5.1
 	github.com/mattn/go-sqlite3 v1.14.17
+	github.com/mileusna/useragent v1.3.3
 	github.com/oschwald/geoip2-golang v1.9.0
 	github.com/samber/lo v1.38.1
 	github.com/sirupsen/logrus v1.9.3
@@ -28,7 +29,6 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
-	github.com/mileusna/useragent v1.3.3 // indirect
 	github.com/oschwald/maxminddb-golang v1.11.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
