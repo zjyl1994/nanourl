@@ -35,6 +35,10 @@ func ListLogHandler(c *fiber.Ctx) error {
 			CountryEmoji: countryEmoji,
 			UserAgent:    x.UserAgent,
 			AccessTime:   x.AccessTime.Unix(),
+			OS:           x.OS,
+			Browser:      x.Browser,
+			Device:       x.Device,
+			DeviceType:   x.DeviceType,
 		}
 	})
 	return c.JSON(fiber.Map{

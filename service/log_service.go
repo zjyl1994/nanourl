@@ -40,12 +40,17 @@ func (LogService) backgroundLogWorker() {
 			continue
 		}
 		models := lo.Map(items, func(v val_obj.AccessLog, _ int) db_model.AccessLog {
+			ua := util.ParseUserAgent(v.UserAgent)
 			return db_model.AccessLog{
 				UrlId:       v.UrlId,
 				Referrer:    v.Referrer,
 				UserIp:      v.UserIp,
 				UserAgent:   v.UserAgent,
 				UserCountry: getIPCountry(geodb, v.UserIp),
+				OS:          ua.OS,
+				Browser:     ua.Browser,
+				Device:      ua.Device,
+				DeviceType:  ua.DeviceType,
 			}
 		})
 		err := vars.DB.CreateInBatches(models, vars.BULK_LOG_SIZE).Error
@@ -99,6 +104,10 @@ func (LogService) List(urlId, page, pageSize int) ([]val_obj.AccessLog, int64, e
 			UserCountry: v.UserCountry,
 			UserAgent:   v.UserAgent,
 			AccessTime:  v.CreatedAt,
+			OS:          v.OS,
+			Browser:     v.Browser,
+			Device:      v.Device,
+			DeviceType:  v.DeviceType,
 		})
 	}
 

@@ -9,4 +9,9 @@ type AccessLog struct {
 	UserIp      string
 	UserAgent   string
 	UserCountry string
+
+	OS         string
+	Browser    string
+	Device     string
+	DeviceType string
 }

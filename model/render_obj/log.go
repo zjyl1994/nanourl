@@ -9,4 +9,8 @@ type AccessLog struct {
 	CountryEmoji string `json:"country_emoji"`
 	UserAgent    string `json:"user_agent"`
 	AccessTime   int64  `json:"access_time"`
+	OS           string `json:"os"`
+	Browser      string `json:"browser"`
+	Device       string `json:"device"`
+	DeviceType   string `json:"device_type"`
 }
