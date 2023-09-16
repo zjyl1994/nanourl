@@ -126,3 +126,7 @@ func (LogService) CountLog(urlid []int) (map[uint]int, error) {
 	}
 	return lo.SliceToMap(result, func(x resultContainer) (uint, int) { return x.UrlId, x.Total }), nil
 }
+
+func (LogService) CleanLog(urlid int) error {
+	return vars.DB.Model(&db_model.AccessLog{}).Delete("url_id = ?", urlid).Error
+}

@@ -39,6 +39,7 @@ func Run(listen string) error {
 	adminG.Get("/new", showPage("new"))
 	adminG.Get("/log", showPage("log"))
 	adminG.Get("/url", showPage("list"))
+	adminG.Get("/url/edit", showPage("edit"))
 	adminG.Get("/stat", admin.StatisticsPage)
 	adminG.Get("/qrcode", admin.GenQRCodeHandler)
 
@@ -47,6 +48,8 @@ func Run(listen string) error {
 	apiG.Get("/url", admin.ListUrlHandler)
 	apiG.Post("/toggle", admin.ToggleUrlHandler)
 	apiG.Delete("/url", admin.DeleteUrlHandler)
+	apiG.Put("/url", admin.UpdateUrlHandler)
+	apiG.Get("/url_info", admin.GetUrlHandler)
 
 	app.Get("/", indexHandler)
 	app.Get("/:code", RedirectHandler)

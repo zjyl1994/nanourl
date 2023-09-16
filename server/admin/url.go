@@ -124,5 +124,34 @@ func DeleteUrlHandler(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
+	var logSvc service.LogService
+	err = logSvc.CleanLog(id)
+	if err != nil {
+		return err
+	}
+	return c.SendStatus(fiber.StatusOK)
+}
+
+func GetUrlHandler(c *fiber.Ctx) error {
+	id := c.QueryInt("id")
+	if id <= 0 {
+		return fiber.ErrBadRequest
+	}
+	var svc service.URLService
+	val, err := svc.GetById(uint(id))
+	if err != nil {
+		return err
+	}
+	result := render_obj.URLObjectLite{
+		Id:          val.Id,
+		LongURL:     val.LongURL,
+		ShortCode:   val.ShortCode,
+		ExpiredTime: lo.Ternary(val.ExpireTime.Valid, val.ExpireTime.Time.Unix(), 0),
+		Enabled:     val.Enabled,
+	}
+	return c.JSON(result)
+}
+
+func UpdateUrlHandler(c *fiber.Ctx) error {
 	return c.SendStatus(fiber.StatusOK)
 }

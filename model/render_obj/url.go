@@ -10,3 +10,11 @@ type URLObject struct {
 	ClickCount int    `json:"click_count"`
 	HrefLink   string `json:"href_link"`
 }
+
+type URLObjectLite struct {
+	Id          uint   `json:"id"`
+	LongURL     string `json:"long_url"`
+	ShortCode   string `json:"short_code"`
+	ExpiredTime int64  `json:"expired_time"`
+	Enabled     bool   `json:"enabled"`
+}

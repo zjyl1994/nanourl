@@ -23,7 +23,7 @@
                             <td>
                                 <button class="button is-small" x-text="item.enabled?'Disable':'Enable'"
                                     @click="toggle(item.id,!item.enabled)"></button>
-                                <button class="button is-small">Edit</button>
+                                <button class="button is-small" @click="window.location=`/admin/url/edit?id=${item.id}`">Edit</button>
                                 <button class="button is-small" @click="delete_url(item.id)">Delete</button>
                             </td>
                         </tr>

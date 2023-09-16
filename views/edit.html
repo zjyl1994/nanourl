@@ -1,0 +1,68 @@
+<div class="container" x-data="data()">
+    <div class="m-2">
+        <div class="field">
+            <label class="label">Long Url</label>
+            <div class="control">
+                <input class="input" type="text" x-model="long_url">
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Short Code</label>
+            <div class="control">
+                <input class="input" type="text" x-model="short_code" disabled>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Expire At</label>
+            <div class="control">
+                <input class="input" type="text" x-model="expire_at">
+            </div>
+        </div>
+
+
+        <div class="field">
+            <div class="control">
+                <button class="button is-link" @click="update_link">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.title = "Edit - Nanourl";
+    function data() {
+        return {
+            id: 0,
+            long_url: '',
+            short_code: '',
+            expire_at: '',
+            link_enabled: true,
+            init: function () {
+                this.id = get_page_param("id", 1);
+                if (this.id > 0)
+                    this.load_data(this.id);
+                else
+                    window.location = '/admin/url';
+            },
+            load_data: function (url_id) {
+                fetch(`/admin/api/url_info?id=${url_id}`).
+                    then(resp => resp.json()).
+                    then(res => {
+                        this.long_url = res.long_url;
+                        this.short_code = res.short_code;
+                        this.link_enabled = res.enabled;
+                        if (res.expired_time > 0)
+                            this.expire_at = format_ts(res.expired_time);
+                    }).
+                    catch(err => alert(err));
+            },
+            update_link: function () {
+                if (this.long_url == '')
+                    return;
+                // TODO: update link info here
+            }
+        }
+    }
+</script>
