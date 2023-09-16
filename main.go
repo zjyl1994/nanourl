@@ -26,6 +26,8 @@ func main() {
 	vars.BaseUrl = os.Getenv("NANOURL_BASEURL")
 	vars.RealIpHeader = os.Getenv("NANOURL_REAL_IP_HEADER")
 	vars.HomepageUrl = os.Getenv("NANOURL_HOMEPAGE")
+	vars.AdminUsername = os.Getenv("NANOURL_ADMIN_USERNAME")
+	vars.AdminPassword = os.Getenv("NANOURL_ADMIN_PASSWORD")
 
 	if vars.Listen == "" {
 		vars.Listen = vars.DEFAULT_LISTEN

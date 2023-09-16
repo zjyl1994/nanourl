@@ -25,7 +25,7 @@ func RedirectHandler(c *fiber.Ctx) error {
 	}
 
 	if !obj.Enabled ||
-		(obj.ExpireTime.Valid && obj.ExpireTime.Time.After(time.Now())) {
+		(obj.ExpireTime.Valid && time.Now().After(obj.ExpireTime.Time)) {
 		return c.Status(fiber.StatusNotFound).SendString("url not found or expired")
 	}
 

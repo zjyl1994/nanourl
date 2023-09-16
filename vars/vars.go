@@ -9,11 +9,13 @@ import (
 )
 
 var (
-	Listen       string
-	DataDir      string
-	BaseUrl      string
-	RealIpHeader string
-	HomepageUrl  string
+	Listen        string
+	DataDir       string
+	BaseUrl       string
+	RealIpHeader  string
+	HomepageUrl   string
+	AdminUsername string
+	AdminPassword string
 
 	DB         *gorm.DB
 	CodeCache  *lru.TwoQueueCache[string, val_obj.URLObject]
@@ -24,7 +26,7 @@ const (
 	DEFAULT_LISTEN  = ":9900"
 	DEFAULT_BASEURL = "http://localhost:9900/"
 
-	CODE_CACHE_SIZE          = 200
+	CODE_CACHE_SIZE          = 500
 	SHORT_CODE_SIZE          = 6
 	SHORT_CODE_MAX_RETRY     = 100
 	BULK_LOG_SIZE            = 100

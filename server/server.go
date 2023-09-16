@@ -4,6 +4,7 @@ import (
 	_ "embed"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/basicauth"
 	"github.com/gofiber/fiber/v2/middleware/favicon"
 	"github.com/gofiber/template/html/v2"
 	"github.com/zjyl1994/nanourl/server/admin"
@@ -30,6 +31,9 @@ func Run(listen string) error {
 	app.Use(favicon.New(favicon.Config{Data: faviconData}))
 
 	adminG := app.Group("/admin")
+	if len(vars.AdminUsername) > 0 || len(vars.AdminPassword) > 0 { // add auth when username/password setuped
+		adminG.Use(basicauth.New(basicauth.Config{Users: map[string]string{vars.AdminUsername: vars.AdminPassword}}))
+	}
 	adminG.Static("/static", "./static")
 	adminG.Post("/create", admin.CreateUrlHandler)
 	adminG.Get("/new", showPage("new"))
