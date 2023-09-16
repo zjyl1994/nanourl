@@ -18,3 +18,21 @@ function get_page_param(param_name, default_value) {
     let data = params.get(param_name);
     return data ? data : default_value;
 }
+
+function get_pagination(page, page_size, total_rows) {
+    const total_page = Math.ceil(total_rows / page_size);
+    const prev_flag = page > 1;
+    const next_flag = page < total_page;
+    var page_arr = [];
+    if (prev_flag)
+        page_arr.push(page - 1);
+    page_arr.push(page);
+    if (next_flag)
+        page_arr.push(page + 1);
+    return {
+        prev: prev_flag,
+        next: next_flag,
+        nums: page_arr,
+        curr: page,
+    }
+}

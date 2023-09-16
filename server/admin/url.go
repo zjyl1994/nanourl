@@ -92,3 +92,37 @@ func GenQRCodeHandler(c *fiber.Ctx) error {
 	c.Set(fiber.HeaderContentType, "image/png")
 	return c.Send(png)
 }
+
+type updateCodeEnabledReq struct {
+	Id      uint `form:"id"`
+	Enabled bool `form:"enabled"`
+}
+
+func ToggleUrlHandler(c *fiber.Ctx) error {
+	var req updateCodeEnabledReq
+	if err := c.BodyParser(&req); err != nil {
+		return err
+	}
+	if req.Id == 0 {
+		return fiber.ErrBadRequest
+	}
+	var svc service.URLService
+	err := svc.UpdateEnabled(req.Id, req.Enabled)
+	if err != nil {
+		return err
+	}
+	return c.SendStatus(fiber.StatusOK)
+}
+
+func DeleteUrlHandler(c *fiber.Ctx) error {
+	id := c.QueryInt("id")
+	if id <= 0 {
+		return fiber.ErrBadRequest
+	}
+	var svc service.URLService
+	err := svc.Delete(uint(id))
+	if err != nil {
+		return err
+	}
+	return c.SendStatus(fiber.StatusOK)
+}

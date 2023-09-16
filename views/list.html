@@ -1,5 +1,5 @@
 <div class="container" x-data="data()">
-    <div class="mx-2">
+    <div class="m-2">
         <div class="table-container">
             <table class="table is-fullwidth">
                 <thead>
@@ -21,15 +21,30 @@
                             <td x-text="format_ts(item.create_time)"></td>
                             <td x-text="item.expire_time == 0?'Never':format_ts(item.expire_time)"></td>
                             <td>
-                                <button class="button is-small" x-text="item.enabled?'Disable':'Enable'"></button>
+                                <button class="button is-small" x-text="item.enabled?'Disable':'Enable'"
+                                    @click="toggle(item.id,!item.enabled)"></button>
                                 <button class="button is-small">Edit</button>
-                                <button class="button is-small">Delete</button>
+                                <button class="button is-small" @click="delete_url(item.id)">Delete</button>
                             </td>
                         </tr>
                     </template>
                 </tbody>
             </table>
         </div>
+        <nav class="pagination" role="navigation" aria-label="pagination">
+            <a class="pagination-previous" :class="{'is-disabled': !pagination.prev }"
+                :href="`/admin/url?page=${pagination.curr-1}`">Previous</a>
+            <a class="pagination-next" :class="{'is-disabled': !pagination.next }"
+                :href="`/admin/url?page=${pagination.curr+1}`">Next page</a>
+            <ul class="pagination-list">
+                <template x-for="page_num in pagination.nums">
+                    <li>
+                        <a class="pagination-link" :class="{'is-current':page_num==pagination.curr}" x-text="page_num"
+                            :href="`/admin/url?page=${page_num}`">1</a>
+                    </li>
+                </template>
+            </ul>
+        </nav>
     </div>
 </div>
 
@@ -43,6 +58,12 @@
                 page_size: 10,
                 total_rows: 0,
             },
+            pagination: {
+                prev: false,
+                next: false,
+                nums: [1],
+                curr: 1,
+            },
             init: function () {
                 let page = get_page_param("page", 1);
                 let page_size = get_page_param("size", 10);
@@ -51,8 +72,29 @@
             load_data: function (page, size) {
                 fetch(`/admin/api/url?page=${page}&size=${size}`).
                     then(resp => resp.json()).
-                    then(res => this.table = res).
+                    then(res => {
+                        this.table = res;
+                        this.pagination = get_pagination(res.page, res.page_size, res.total_rows);
+                    }).
                     catch(err => alert(err));
+            },
+            toggle: function (id, enabled) {
+                const fd = new FormData();
+                fd.append('id', id);
+                fd.append('enabled', enabled);
+
+                fetch('/admin/api/toggle', {
+                    method: 'POST',
+                    body: fd,
+                }).then(resp => this.load_data(this.table.page, this.table.page_size)).
+                    catch(err => alert(err));
+            },
+            delete_url: function (id) {
+                if (window.confirm("Confirm delete?")) {
+                    fetch(`/admin/api/url?id=${id}`, { method: 'DELETE' })
+                        .then(resp => this.load_data(this.table.page, this.table.page_size)).
+                        catch(err => alert(err));
+                }
             }
         }
     }

@@ -125,3 +125,11 @@ func (s URLService) SearchCode(code string) (val_obj.URLObject, error) {
 		return *valObj, nil
 	}
 }
+
+func (s URLService) UpdateEnabled(id uint, enabled bool) error {
+	return vars.DB.Model(&db_model.URLObject{}).Where("id = ?", id).UpdateColumn("enabled", enabled).Error
+}
+
+func (s URLService) Delete(id uint) error {
+	return vars.DB.Model(&db_model.URLObject{}).Delete("id = ?", id).Error
+}

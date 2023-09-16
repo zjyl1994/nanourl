@@ -41,6 +41,8 @@ func Run(listen string) error {
 	apiG := adminG.Group("/api")
 	apiG.Get("/log", admin.ListLogHandler)
 	apiG.Get("/url", admin.ListUrlHandler)
+	apiG.Post("/toggle", admin.ToggleUrlHandler)
+	apiG.Delete("/url", admin.DeleteUrlHandler)
 
 	app.Get("/", indexHandler)
 	app.Get("/:code", RedirectHandler)
