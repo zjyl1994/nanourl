@@ -16,7 +16,7 @@
                     <template x-for="item in table.list">
                         <tr>
                             <td><a :href="item.href_link" x-text="item.short_code"></a></td>
-                            <td><a :href="item.long_url" x-text="item.long_url"></a></td>
+                            <td class="break-long-text"><a :href="item.long_url" x-text="item.long_url"></a></td>
                             <td><a :href="`/admin/log?id=${item.id}`" x-text="item.click_count"></a></td>
                             <td x-text="format_ts(item.create_time)"></td>
                             <td x-text="item.expire_time == 0?'Never':format_ts(item.expire_time)"></td>
