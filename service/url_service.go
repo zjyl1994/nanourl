@@ -133,3 +133,15 @@ func (s URLService) UpdateEnabled(id uint, enabled bool) error {
 func (s URLService) Delete(id uint) error {
 	return vars.DB.Model(&db_model.URLObject{}).Delete("id = ?", id).Error
 }
+
+func (s URLService) Update(val val_obj.URLObject) error {
+	var m db_model.URLObject
+	err := vars.DB.First(&m, val.Id).Error
+	if err != nil {
+		return err
+	}
+	m.Enabled = val.Enabled
+	m.URL = val.LongURL
+	m.ExpireAt = val.ExpireTime
+	return vars.DB.Save(&m).Error
+}

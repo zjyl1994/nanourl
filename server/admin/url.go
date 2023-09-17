@@ -152,6 +152,34 @@ func GetUrlHandler(c *fiber.Ctx) error {
 	return c.JSON(result)
 }
 
+type updateUrlReq struct {
+	Id        uint   `form:"id"`
+	Enabled   bool   `form:"enabled"`
+	ExpireSec int64  `form:"expire"`
+	LongURL   string `form:"long_url"`
+}
+
 func UpdateUrlHandler(c *fiber.Ctx) error {
+	var req updateUrlReq
+	if err := c.BodyParser(&req); err != nil {
+		return err
+	}
+	if req.Id == 0 {
+		return fiber.ErrBadRequest
+	}
+
+	var val val_obj.URLObject
+	val.Id = req.Id
+	val.Enabled = req.Enabled
+	val.LongURL = req.LongURL
+	if req.ExpireSec > 0 {
+		val.ExpireTime = sql.NullTime{Valid: true, Time: time.Unix(req.ExpireSec, 0)}
+	}
+	var svc service.URLService
+	err := svc.Update(val)
+	if err != nil {
+		return err
+	}
+
 	return c.SendStatus(fiber.StatusOK)
 }

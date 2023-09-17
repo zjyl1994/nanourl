@@ -21,6 +21,12 @@
             </div>
         </div>
 
+        <div class="field">
+            <label class="checkbox">
+                <input type="checkbox" x-model="link_enabled">
+                Enabled
+            </label>
+        </div>
 
         <div class="field">
             <div class="control">
@@ -38,7 +44,7 @@
             long_url: '',
             short_code: '',
             expire_at: '',
-            link_enabled: true,
+            link_enabled: '',
             init: function () {
                 this.id = get_page_param("id", 1);
                 if (this.id > 0)
@@ -61,7 +67,32 @@
             update_link: function () {
                 if (this.long_url == '')
                     return;
-                // TODO: update link info here
+
+                var expire_ts = 0;
+                if (this.expire_at != '') {
+                    expire_ts = Date.parse(this.expire_at);
+                    if (isNaN(expire_ts)) {
+                        alert('expire time cannot parsed.');
+                        return;
+                    }
+                    expire_ts = expire_ts / 1000;
+                }
+                const fd = new FormData();
+                fd.append('id',this.id);
+                fd.append('long_url', this.long_url);
+                fd.append('enabled',this.link_enabled);
+                fd.append('expire',expire_ts);
+                
+                fetch('/admin/api/url', {
+                    method: 'PUT',
+                    body: fd,
+                })
+                    .then(res => res.text())
+                    .then(res => {
+                        alert("OK");
+                        window.location = '/admin/url';
+                    })
+                    .catch(err => alert(err));
             }
         }
     }
