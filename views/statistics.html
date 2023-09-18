@@ -1,43 +1,139 @@
 <div class="container">
     <div class="m-2">
-        <h1 class="title">Top Urls</h1>
-        <div class="table-container">
-            <table class="table is-fullwidth">
-                <thead>
-                    <tr>
-                        <th>Url</th>
-                        <th>Click</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{range .top_url}}
-                    <tr>
-                        <td>{{.Dim}}</td>
-                        <td>{{.Click}}</td>
-                    </tr>
-                    {{end}}
-                </tbody>
-            </table>
-        </div>
+        <div class="columns is-multiline">
 
-        <h1 class="title">Top Country</h1>
-        <div class="table-container">
-            <table class="table is-fullwidth">
-                <thead>
-                    <tr>
-                        <th>Country</th>
-                        <th>Click</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{range .top_country}}
-                    <tr>
-                        <td>{{.Dim}}</td>
-                        <td>{{.Click}}</td>
-                    </tr>
-                    {{end}}
-                </tbody>
-            </table>
+            <div class="column is-half">
+                <h1 class="title">Click</h1>
+                <div class="table-container">
+                    <table class="table is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Click</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{range .day_click}}
+                            <tr>
+                                <td>{{.Dim}}</td>
+                                <td>{{.Click}}</td>
+                            </tr>
+                            {{end}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="column is-half">
+                <h1 class="title">Urls</h1>
+                <div class="table-container">
+                    <table class="table is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>Url</th>
+                                <th>Click</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{range .top_url}}
+                            <tr>
+                                <td>{{.Dim}}</td>
+                                <td>{{.Click}}</td>
+                            </tr>
+                            {{end}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="column is-half">
+                <h1 class="title">Country</h1>
+                <div class="table-container">
+                    <table class="table is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>Country</th>
+                                <th>Click</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{range .top_country}}
+                            <tr>
+                                <td>{{.Dim}}</td>
+                                <td>{{.Click}}</td>
+                            </tr>
+                            {{end}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="column is-half">
+                <h1 class="title">Device</h1>
+                <div class="table-container">
+                    <table class="table is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>Device</th>
+                                <th>Click</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{range .top_device}}
+                            <tr>
+                                <td>{{.Dim}}</td>
+                                <td>{{.Click}}</td>
+                            </tr>
+                            {{end}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="column is-half">
+                <h1 class="title">OS</h1>
+                <div class="table-container">
+                    <table class="table is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>OS</th>
+                                <th>Click</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{range .top_os}}
+                            <tr>
+                                <td>{{.Dim}}</td>
+                                <td>{{.Click}}</td>
+                            </tr>
+                            {{end}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="column is-half">
+                <h1 class="title">Browser</h1>
+                <div class="table-container">
+                    <table class="table is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>Browser</th>
+                                <th>Click</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{range .top_browser}}
+                            <tr>
+                                <td>{{.Dim}}</td>
+                                <td>{{.Click}}</td>
+                            </tr>
+                            {{end}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>

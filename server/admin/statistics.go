@@ -15,8 +15,28 @@ func StatisticsPage(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
+	dayClick, err := svc.DayClick()
+	if err != nil {
+		return err
+	}
+	topOS, err := svc.TopOS()
+	if err != nil {
+		return err
+	}
+	topBrowser, err := svc.TopBrowser()
+	if err != nil {
+		return err
+	}
+	topDevice, err := svc.TopDevice()
+	if err != nil {
+		return err
+	}
 	return c.Render("statistics", fiber.Map{
 		"top_url":     topUrls,
 		"top_country": topCountrys,
+		"top_os":      topOS,
+		"top_browser": topBrowser,
+		"top_device":  topDevice,
+		"day_click":   dayClick,
 	})
 }

@@ -37,6 +37,9 @@ const (
 	GEOIP_DATABASE_FILENAME = "GeoLite2-Country.mmdb"
 	GEOIP_EMOJI_URL         = "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/index.json"
 	GEOIP_EMOJI_FILENAME    = "flag-emoji.json"
+
+	STATISTICS_DAY   = 30
+	STATISTICS_LIMIT = 10
 )
 
 type GeoCountryItem struct {
