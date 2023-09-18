@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/mileusna/useragent"
+	"github.com/zjyl1994/nanourl/vars"
 )
 
 func FormatTime(t time.Time) string {
@@ -43,4 +44,12 @@ func ParseUserAgent(s string) UserAgentData {
 		result.DeviceType = "Bot"
 	}
 	return result
+}
+
+func CountryCode2EmojiAndName(code string) string {
+	item, ok := vars.GeoCountry[code]
+	if !ok {
+		return "Unknown"
+	}
+	return item.Emoji + " " + item.Name
 }

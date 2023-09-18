@@ -1,3 +1,43 @@
-<div>
-    it works!
+<div class="container">
+    <div class="m-2">
+        <h1 class="title">Top Urls</h1>
+        <div class="table-container">
+            <table class="table is-fullwidth">
+                <thead>
+                    <tr>
+                        <th>Url</th>
+                        <th>Click</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range .top_url}}
+                    <tr>
+                        <td>{{.Dim}}</td>
+                        <td>{{.Click}}</td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+        </div>
+
+        <h1 class="title">Top Country</h1>
+        <div class="table-container">
+            <table class="table is-fullwidth">
+                <thead>
+                    <tr>
+                        <th>Country</th>
+                        <th>Click</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range .top_country}}
+                    <tr>
+                        <td>{{.Dim}}</td>
+                        <td>{{.Click}}</td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
